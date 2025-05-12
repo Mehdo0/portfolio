@@ -1,0 +1,201 @@
+/* styles.css */
+
+/* Variables de couleurs */
+:root {
+  --clr-primary: #1e1e2f;
+  --clr-secondary: #ff6b6b;
+  --clr-accent: #4ecdc4;
+  --clr-bg: #f7f7ff;
+  --clr-text: #333;
+  --clr-card-bg: #ffffff;
+}
+
+/* Reset basique */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--clr-bg);
+  color: var(--clr-text);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--clr-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+a:hover {
+  color: var(--clr-accent);
+}
+
+header {
+  background: var(--clr-primary);
+  color: #fff;
+  text-align: center;
+  padding: 2rem 1rem;
+  position: relative;
+}
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  animation: fadeInDown 1s ease;
+}
+header p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  animation: fadeInUp 1s ease;
+}
+header img {
+  max-width: 200px;
+  border-radius: 50%;
+  margin-top: 1rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  animation: fadeIn 1.5s ease;
+}
+nav ul li a {
+  color: #fff;
+  font-weight: bold;
+  padding: 0.5rem;
+}
+
+main {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+section {
+  margin-bottom: 3rem;
+}
+
+section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+section h2::after {
+  content: '';
+  width: 50px;
+  height: 4px;
+  background: var(--clr-secondary);
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+}
+
+/* Section À propos */
+#apropos ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+#apropos ul li {
+  background: var(--clr-card-bg);
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+#apropos ul li:hover {
+  transform: translateY(-5px);
+}
+
+/* Competences */
+#competences ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+#competences ul li {
+  background: var(--clr-card-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+#competences ul li:hover {
+  transform: translateY(-5px);
+}
+
+/* Projets */
+.projects-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+.project-card {
+  background: var(--clr-card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.project-card:hover {
+  transform: translateY(-8px);
+}
+.project-card img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+.project-card h3 {
+  margin: 1rem;
+}
+.project-card p {
+  margin: 0 1rem 1rem;
+  flex-grow: 1;
+}
+.project-card a {
+  margin: 0 1rem 1rem;
+  font-weight: bold;
+  align-self: flex-start;
+}
+
+/* Contact */
+#contact p {
+  margin-bottom: 0.5rem;
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--clr-primary);
+  color: #fff;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
