@@ -20,19 +20,6 @@ CSS3 – design responsif, animations douces, dark mode
 
 JavaScript (vanilla) – interactions UX : scroll fluide, apparition des sections, bouton haut de page, thème, confetti
 
-✨ Fonctionnalités principales
-✅ Navigation fluide entre les sections via ancrage
-
-✅ Apparition animée des sections au scroll
-
-✅ Bouton retour en haut ⬆️
-
-✅ Changement de thème clair/sombre 🌙/☀️
-
-✅ Effet confetti 🎉 lors de l'envoi de mail
-
-✅ Responsive design : adapté aux mobiles, tablettes et desktops
-
 📦 Installation
 Aucune dépendance externe requise.
 
