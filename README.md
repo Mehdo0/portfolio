@@ -1,6 +1,6 @@
 # 🌐 Portfolio - Mehdi Mouaffak
 
-Ce dépôt contient le code source du **portfolio personnel** de Mehdi Mouaffak, développé dans le but de présenter ses compétences, projets et parcours technique. Il s'agit d'une application web statique codée à la main avec HTML, CSS et JavaScript vanilla.
+Ce dépôt contient le code source de mon **portfolio personnel** , développé dans le but de présenter mes compétences, projets et parcours technique. Il s'agit d'une application web statique codée à la main avec HTML, CSS et JavaScript vanilla.
 
 ---
 
