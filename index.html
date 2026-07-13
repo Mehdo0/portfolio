@@ -100,7 +100,7 @@ section { padding: 80px 0; }
 .terminal-bar span:nth-child(3) { background: #27c93f; }
 .terminal-body {
   padding: 20px; font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
-  font-size: 0.85rem; line-height: 1.8; color: #a0a0b0; min-height: 150px;
+  font-size: 0.85rem; line-height: 1.8; color: #a0a0b0; height: 320px; overflow: hidden;
 }
 .terminal-body .cmd { color: var(--accent); }
 .terminal-body .output { color: #6ee7b7; }
@@ -321,6 +321,8 @@ resize();
 window.addEventListener('resize', resize);
 
 const PARTICLE_COUNT = 60;
+let mouseX = -1000, mouseY = -1000;
+
 for (let i = 0; i < PARTICLE_COUNT; i++) {
   particles.push({
     x: Math.random() * w,
@@ -332,11 +334,28 @@ for (let i = 0; i < PARTICLE_COUNT; i++) {
   });
 }
 
+document.addEventListener('mousemove', function(e) {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
 function draw() {
   ctx.clearRect(0, 0, w, h);
 
   for (let i = 0; i < particles.length; i++) {
     const p = particles[i];
+
+    const dx = mouseX - p.x;
+    const dy = mouseY - p.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 180 && dist > 0) {
+      const force = (180 - dist) / 180 * 0.03;
+      p.vx -= (dx / dist) * force;
+      p.vy -= (dy / dist) * force;
+    }
+
+    p.vx *= 0.998;
+    p.vy *= 0.998;
     p.x += p.vx;
     p.y += p.vy;
     if (p.x < 0) p.x = w;
