@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mehdi Mouaffak — Developer & SaaS Builder</title>
-<meta name="description" content="Full-stack developer and SaaS builder based in Lausanne, Switzerland. Student at 42, specializing in API development, cybersecurity, and browser extensions.">
+<title>Mehdi Mouaffak — Full-Stack Developer</title>
+<meta name="description" content="Full-stack developer based in Lausanne, Switzerland. Student at 42. Systems programming, web platforms, cybersecurity, and shipped products.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -18,7 +18,6 @@
   --accent: #e30613;
   --accent-glow: rgba(227,6,19,0.15);
   --border: #1e1e2a;
-  --grid: 8px;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -31,13 +30,9 @@ body {
   overflow-x: hidden;
 }
 
-.grid-bg {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 40%, transparent 70%);
+canvas#bg-canvas {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
 }
 
 .container { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
@@ -77,17 +72,17 @@ section { padding: 80px 0; }
   border-radius: 100px; padding: 6px 16px; font-size: 0.8rem;
   font-weight: 500; color: var(--text-secondary); margin-bottom: 32px;
 }
-.hero-badge .dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; }
-.hero-badge .dot::after { content: ''; display: block; width: 100%; height: 100%; border-radius: 50%; background: #22c55e; animation: pulse-dot 2s infinite; }
-@keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(2); } }
+.hero-badge .dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; position: relative; }
+.hero-badge .dot::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: #22c55e; opacity: 0.35; animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%, 100% { opacity: 0.35; transform: scale(1); } 50% { opacity: 0; transform: scale(2.5); } }
 
 .hero h1 {
   font-size: clamp(2.6rem, 6vw, 4.2rem); font-weight: 700; line-height: 1.08;
-  letter-spacing: -0.03em; max-width: 700px;
+  letter-spacing: -0.03em; max-width: 720px;
 }
 .hero h1 .accent { color: var(--accent); }
 .hero p.subtitle {
-  font-size: 1.15rem; color: var(--text-secondary); max-width: 520px;
+  font-size: 1.15rem; color: var(--text-secondary); max-width: 540px;
   margin-top: 24px; font-weight: 400; line-height: 1.7;
 }
 
@@ -139,7 +134,7 @@ h2 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 
   transition: transform 0.3s; border-radius: 0 2px 2px 0;
 }
 .project-card:hover::before { transform: scaleY(1); }
-.project-card .project-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.project-card .project-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
 .project-card h3 { font-size: 1.2rem; font-weight: 600; }
 .project-card .tech-tags { display: flex; gap: 8px; flex-wrap: wrap; }
 .project-card .tech-tags span {
@@ -163,8 +158,22 @@ footer {
   text-align: center; color: var(--text-secondary); font-size: 0.8rem;
 }
 
-.reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal.visible { opacity: 1; transform: translateY(0); }
+/* Scroll reveal — directional variety */
+.reveal-up    { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal-left  { opacity: 0; transform: translateX(-30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal-right { opacity: 0; transform: translateX(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal-scale { opacity: 0; transform: scale(0.92); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal-up.visible,
+.reveal-left.visible,
+.reveal-right.visible,
+.reveal-scale.visible { opacity: 1; transform: translate(0) scale(1); }
+
+/* Stagger delays */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+.delay-5 { transition-delay: 0.5s; }
 
 @media (max-width: 768px) {
   .hero { padding-top: 120px; padding-bottom: 60px; }
@@ -180,7 +189,7 @@ footer {
 </head>
 <body>
 
-<div class="grid-bg"></div>
+<canvas id="bg-canvas"></canvas>
 
 <nav>
   <a href="#about">About</a>
@@ -191,79 +200,79 @@ footer {
 
 <main class="container">
 
-  <section class="hero reveal" id="about">
+  <section class="hero reveal-up" id="about">
     <div class="hero-content">
-      <div class="hero-photo">
+      <div class="hero-photo reveal-scale">
         <img src="photo.jpg" alt="Mehdi Mouaffak">
       </div>
       <div class="hero-text">
-        <div class="hero-badge"><span class="dot"></span> Available for internship — Lausanne, CH</div>
-        <h1>I build <span class="accent">SaaS products</span> from the metal up.</h1>
-        <p class="subtitle">Full-stack developer and student at 42 Lausanne. I turn ideas into shipped products — APIs, browser extensions, and security tools that run in production.</p>
+        <div class="hero-badge reveal-up delay-1"><span class="dot"></span> Available for internship — Lausanne, CH</div>
+        <h1 class="reveal-up delay-2">I build across <span class="accent">the entire stack</span> — from systems to shipped products.</h1>
+        <p class="subtitle reveal-up delay-3">Full-stack developer and student at 42 Lausanne. Low-level systems, web platforms, cybersecurity, browser extensions — I write code that runs in production.</p>
       </div>
     </div>
-    <div class="terminal">
+    <div class="terminal reveal-up delay-4">
       <div class="terminal-bar"><span></span><span></span><span></span></div>
       <div class="terminal-body" id="terminal"></div>
     </div>
   </section>
 
-  <section id="skills" class="reveal">
-    <div class="section-label">Technical skills</div>
-    <h2>Stack</h2>
+  <section id="skills">
+    <div class="section-label reveal-up">Technical skills</div>
+    <h2 class="reveal-up">Stack</h2>
     <div class="skills-grid">
-      <div class="skill-tag">C</div>
-      <div class="skill-tag">C++</div>
-      <div class="skill-tag">Python</div>
-      <div class="skill-tag">JavaScript</div>
-      <div class="skill-tag">TypeScript</div>
-      <div class="skill-tag">Bash</div>
-      <div class="skill-tag">FastAPI</div>
-      <div class="skill-tag">SvelteKit</div>
-      <div class="skill-tag">Playwright</div>
-      <div class="skill-tag">Docker</div>
-      <div class="skill-tag">Nginx</div>
-      <div class="skill-tag">Linux</div>
-      <div class="skill-tag">Stripe</div>
-      <div class="skill-tag">Git</div>
-      <div class="skill-tag">SQLite</div>
-      <div class="skill-tag">Chrome Ext.</div>
+      <div class="skill-tag reveal-scale delay-1">C</div>
+      <div class="skill-tag reveal-scale delay-1">C++</div>
+      <div class="skill-tag reveal-scale delay-1">Python</div>
+      <div class="skill-tag reveal-scale delay-1">JavaScript</div>
+      <div class="skill-tag reveal-scale delay-2">TypeScript</div>
+      <div class="skill-tag reveal-scale delay-2">Bash</div>
+      <div class="skill-tag reveal-scale delay-2">FastAPI</div>
+      <div class="skill-tag reveal-scale delay-2">SvelteKit</div>
+      <div class="skill-tag reveal-scale delay-3">Playwright</div>
+      <div class="skill-tag reveal-scale delay-3">Docker</div>
+      <div class="skill-tag reveal-scale delay-3">Nginx</div>
+      <div class="skill-tag reveal-scale delay-3">Linux</div>
+      <div class="skill-tag reveal-scale delay-4">Stripe</div>
+      <div class="skill-tag reveal-scale delay-4">Git</div>
+      <div class="skill-tag reveal-scale delay-4">SQLite</div>
+      <div class="skill-tag reveal-scale delay-4">Chrome Ext.</div>
     </div>
   </section>
 
-  <section id="projects" class="reveal">
-    <div class="section-label">Featured work</div>
-    <h2>Projects</h2>
+  <section id="projects">
+    <div class="section-label reveal-up">Featured work</div>
+    <h2 class="reveal-up">Projects</h2>
     <div class="projects-grid">
-      <a href="https://github.com/Mehdo0/seo-tools" class="project-card" target="_blank">
+      <a href="https://github.com/Mehdo0/seo-tools" class="project-card reveal-left delay-1" target="_blank">
         <div class="project-header">
           <h3>SEO Tools</h3>
           <div class="tech-tags"><span>FastAPI</span><span>Playwright</span><span>Stripe</span><span>Chrome MV3</span></div>
         </div>
         <p>Chrome extension and API for SEO auditing and B2B e-commerce scraping. 76 automated tests, JWT authentication, rate limiting. Built and shipped in two weeks.</p>
       </a>
-      <a href="https://github.com/Mehdo0/ft_transcendence" class="project-card" target="_blank">
+      <a href="https://github.com/Mehdo0/ft_transcendence" class="project-card reveal-left delay-2" target="_blank">
         <div class="project-header">
           <h3>ft_transcendence</h3>
           <div class="tech-tags"><span>SvelteKit</span><span>FastAPI</span><span>Docker</span><span>Nginx</span></div>
         </div>
         <p>Full-stack online gaming platform with real-time multiplayer Pong, ELO ranking, and live chat. 255 commits, team of four developers.</p>
       </a>
-      <a href="https://github.com/Mehdo0/vulnforge" class="project-card" target="_blank">
+      <a href="https://github.com/Mehdo0/vulnforge" class="project-card reveal-left delay-3" target="_blank">
         <div class="project-header">
           <h3>VulnForge</h3>
           <div class="tech-tags"><span>FastAPI</span><span>SvelteKit</span><span>Cybersecurity</span></div>
         </div>
         <p>AI-powered penetration testing platform. Multi-agent orchestration for automated vulnerability discovery, scoring, and PDF reporting.</p>
       </a>
-      <a href="https://github.com/Mehdo0/cube3d" class="project-card" target="_blank">
+      <a href="https://github.com/Mehdo0/cube3d" class="project-card reveal-right delay-1" target="_blank">
         <div class="project-header">
           <h3>Cube3D</h3>
           <div class="tech-tags"><span>C</span><span>Raycasting</span><span>Graphics</span></div>
         </div>
         <p>Wolfenstein 3D clone written from scratch in C. Raycasting engine with texture mapping, collision detection, and real-time rendering via MiniLibX.</p>
       </a>
-      <a href="https://github.com/Mehdo0/Inception" class="project-card" target="_blank">
+      <a href="https://github.com/Mehdo0/Inception" class="project-card reveal-right delay-2" target="_blank">
         <div class="project-header">
           <h3>Inception</h3>
           <div class="tech-tags"><span>Docker</span><span>Nginx</span><span>MariaDB</span><span>WordPress</span></div>
@@ -273,19 +282,19 @@ footer {
     </div>
   </section>
 
-  <section id="contact" class="reveal">
-    <div class="section-label">Get in touch</div>
-    <h2>Contact</h2>
+  <section id="contact">
+    <div class="section-label reveal-up">Get in touch</div>
+    <h2 class="reveal-up">Contact</h2>
     <div class="contact-links">
-      <a href="mailto:mmouaffa@student.42lausanne.ch" class="contact-link">
+      <a href="mailto:mmouaffa@student.42lausanne.ch" class="contact-link reveal-scale delay-1">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
         Email
       </a>
-      <a href="https://linkedin.com/in/mehdi-mouaffak-238558334" class="contact-link" target="_blank">
+      <a href="https://linkedin.com/in/mehdi-mouaffak-238558334" class="contact-link reveal-scale delay-2" target="_blank">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
         LinkedIn
       </a>
-      <a href="https://github.com/Mehdo0" class="contact-link" target="_blank">
+      <a href="https://github.com/Mehdo0" class="contact-link reveal-scale delay-3" target="_blank">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
         GitHub
       </a>
@@ -299,6 +308,65 @@ footer {
 </footer>
 
 <script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let w, h;
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const PARTICLE_COUNT = 60;
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+  particles.push({
+    x: Math.random() * w,
+    y: Math.random() * h,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.3,
+    r: Math.random() * 1.5 + 0.5,
+    opacity: Math.random() * 0.3 + 0.1
+  });
+}
+
+function draw() {
+  ctx.clearRect(0, 0, w, h);
+
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0) p.x = w;
+    if (p.x > w) p.x = 0;
+    if (p.y < 0) p.y = h;
+    if (p.y > h) p.y = 0;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(227,6,19,${p.opacity})`;
+    ctx.fill();
+
+    for (let j = i + 1; j < particles.length; j++) {
+      const q = particles[j];
+      const dx = p.x - q.x;
+      const dy = p.y - q.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 100) {
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.strokeStyle = `rgba(255,255,255,${0.03 * (1 - dist / 100)})`;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
 const terminal = document.getElementById('terminal');
 const lines = [
   '<span class="output">$ </span><span class="cmd">whoami</span>',
@@ -330,8 +398,8 @@ setTimeout(typeLine, 600);
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
 
 document.querySelectorAll('a[href^="#"]').forEach(link => {
   link.addEventListener('click', function(e) {
