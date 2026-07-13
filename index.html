@@ -291,22 +291,22 @@ footer {
     <div class="section-label reveal-up">Technical skills</div>
     <h2 class="reveal-up">Stack</h2>
     <div class="skills-grid">
-      <div class="skill-tag reveal-scale delay-1">C</div>
-      <div class="skill-tag reveal-scale delay-1">C++</div>
-      <div class="skill-tag reveal-scale delay-1">Python</div>
-      <div class="skill-tag reveal-scale delay-1">JavaScript</div>
-      <div class="skill-tag reveal-scale delay-2">TypeScript</div>
-      <div class="skill-tag reveal-scale delay-2">Bash</div>
-      <div class="skill-tag reveal-scale delay-2">FastAPI</div>
-      <div class="skill-tag reveal-scale delay-2">SvelteKit</div>
-      <div class="skill-tag reveal-scale delay-3">Playwright</div>
-      <div class="skill-tag reveal-scale delay-3">Docker</div>
-      <div class="skill-tag reveal-scale delay-3">Nginx</div>
-      <div class="skill-tag reveal-scale delay-3">Linux</div>
-      <div class="skill-tag reveal-scale delay-4">Stripe</div>
-      <div class="skill-tag reveal-scale delay-4">Git</div>
-      <div class="skill-tag reveal-scale delay-4">SQLite</div>
-      <div class="skill-tag reveal-scale delay-4">Chrome Ext.</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.04s">C</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.06s">C++</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.08s">Python</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.10s">JavaScript</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.12s">TypeScript</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.14s">Bash</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.16s">FastAPI</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.18s">SvelteKit</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.20s">Playwright</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.22s">Docker</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.24s">Nginx</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.26s">Linux</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.28s">Stripe</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.30s">Git</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.32s">SQLite</div>
+      <div class="skill-tag reveal-scale" style="transition-delay:0.34s">Chrome Ext.</div>
     </div>
   </section>
 
@@ -379,7 +379,6 @@ footer {
 
 <div class="quick-scan" id="quick-scan">
   <div class="tl-dr">
-    <span class="label">TL;DR</span>
     <span>42 Lausanne</span><span class="sep">·</span>
     <span>Full-stack C / Python / JS</span><span class="sep">·</span>
     <span>Docker</span><span class="sep">·</span>
@@ -515,6 +514,8 @@ function showPrompt() {
 
   let historyIdx = -1;
   const history = [];
+  const commands = ['ls', 'cat cv.pdf', 'help', 'clear'];
+  let tabIdx = 0;
 
   input.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
@@ -529,6 +530,20 @@ function showPrompt() {
       terminal.scrollTop = terminal.scrollHeight;
 
       handleCommand(cmd);
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const val = input.value.trim().toLowerCase();
+      const matches = commands.filter(c => c.startsWith(val));
+      if (matches.length === 1) {
+        input.value = matches[0];
+        tabIdx = commands.indexOf(matches[0]);
+      } else if (matches.length > 1) {
+        tabIdx = (tabIdx + 1) % matches.length;
+        input.value = matches[tabIdx];
+      } else if (val === '') {
+        tabIdx = (tabIdx + 1) % commands.length;
+        input.value = commands[tabIdx];
+      }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (historyIdx > 0) { historyIdx--; input.value = history[historyIdx]; }
@@ -536,6 +551,8 @@ function showPrompt() {
       e.preventDefault();
       if (historyIdx < history.length - 1) { historyIdx++; input.value = history[historyIdx]; }
       else { historyIdx = history.length; input.value = ''; }
+    } else {
+      tabIdx = 0;
     }
   });
 }
