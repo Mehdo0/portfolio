@@ -18,6 +18,8 @@
   --accent: #e30613;
   --accent-glow: rgba(227,6,19,0.15);
   --border: #1e1e2a;
+  --green: #6ee7b7;
+  --yellow: #ffbd2e;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -29,12 +31,10 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-
 canvas#bg-canvas {
   position: fixed; inset: 0; z-index: 0;
   pointer-events: none;
 }
-
 .container { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 
 nav {
@@ -52,13 +52,10 @@ nav a:hover { color: var(--text); background: var(--surface); }
 
 section { padding: 80px 0; }
 
-.hero { padding-top: 160px; padding-bottom: 100px; }
-.hero-content {
-  display: flex; align-items: center; gap: 48px;
-}
+.hero { padding-top: 160px; padding-bottom: 80px; }
+.hero-content { display: flex; align-items: center; gap: 48px; }
 .hero-photo {
-  flex-shrink: 0;
-  width: 160px; height: 160px; border-radius: 50%;
+  flex-shrink: 0; width: 160px; height: 160px; border-radius: 50%;
   overflow: hidden; border: 2px solid var(--border);
   box-shadow: 0 0 0 4px var(--bg), 0 0 0 6px var(--accent);
   transition: box-shadow 0.4s;
@@ -100,11 +97,16 @@ section { padding: 80px 0; }
 .terminal-bar span:nth-child(3) { background: #27c93f; }
 .terminal-body {
   padding: 20px; font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
-  font-size: 0.85rem; line-height: 1.8; color: #a0a0b0; height: 320px; overflow: hidden;
+  font-size: 0.85rem; line-height: 1.8; color: #a0a0b0; height: 360px; overflow-y: auto;
 }
 .terminal-body .cmd { color: var(--accent); }
-.terminal-body .output { color: #6ee7b7; }
+.terminal-body .output { color: var(--green); }
 .terminal-body .cursor { display: inline-block; width: 8px; height: 16px; background: var(--text); animation: blink 1s step-end infinite; vertical-align: text-bottom; }
+.terminal-body .prompt-line { display: flex; align-items: center; gap: 4px; }
+.terminal-body .prompt-line input {
+  flex: 1; background: transparent; border: none; color: var(--text);
+  font-family: inherit; font-size: inherit; outline: none; caret-color: var(--accent);
+}
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
 .section-label {
@@ -112,6 +114,20 @@ section { padding: 80px 0; }
   color: var(--accent); font-weight: 600; margin-bottom: 16px;
 }
 h2 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 48px; }
+
+/* Git log timeline */
+.timeline { display: flex; flex-direction: column; gap: 4px; }
+.git-commit {
+  display: flex; align-items: baseline; gap: 12px;
+  font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+  font-size: 0.82rem; padding: 10px 16px; border-radius: 6px;
+  transition: background 0.2s;
+}
+.git-commit:hover { background: var(--surface); }
+.git-commit .hash { color: var(--yellow); min-width: 54px; }
+.git-commit .tag { color: var(--green); min-width: 58px; font-weight: 600; }
+.git-commit .msg { color: var(--text-secondary); }
+.git-commit .date { color: var(--text-secondary); opacity: 0.5; margin-left: auto; font-size: 0.75rem; white-space: nowrap; }
 
 .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
 .skill-tag {
@@ -158,7 +174,30 @@ footer {
   text-align: center; color: var(--text-secondary); font-size: 0.8rem;
 }
 
-/* Scroll reveal — directional variety */
+/* Sticky quick-scan banner */
+.quick-scan {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(17,17,24,0.95); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border); padding: 14px 24px;
+  display: flex; align-items: center; justify-content: center; gap: 20px;
+  flex-wrap: wrap; transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.quick-scan.visible { transform: translateY(0); }
+.quick-scan .tl-dr { color: var(--text-secondary); font-size: 0.82rem; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.quick-scan .tl-dr .label {
+  background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px;
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+}
+.quick-scan .tl-dr .sep { color: var(--border); }
+.quick-scan .action-btn {
+  background: var(--accent); color: white; border: none; padding: 8px 18px;
+  border-radius: 6px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  text-decoration: none; transition: opacity 0.2s; white-space: nowrap;
+}
+.quick-scan .action-btn:hover { opacity: 0.85; }
+
+/* Scroll reveal */
 .reveal-up    { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 .reveal-left  { opacity: 0; transform: translateX(-30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 .reveal-right { opacity: 0; transform: translateX(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -168,7 +207,6 @@ footer {
 .reveal-right.visible,
 .reveal-scale.visible { opacity: 1; transform: translate(0) scale(1); }
 
-/* Stagger delays */
 .delay-1 { transition-delay: 0.1s; }
 .delay-2 { transition-delay: 0.2s; }
 .delay-3 { transition-delay: 0.3s; }
@@ -184,6 +222,9 @@ footer {
   .project-card { padding: 20px; }
   .project-card:hover { transform: none; }
   .skills-grid { grid-template-columns: repeat(3, 1fr); }
+  .git-commit { font-size: 0.72rem; gap: 8px; }
+  .git-commit .date { display: none; }
+  .quick-scan { flex-direction: column; gap: 10px; text-align: center; }
 }
 </style>
 </head>
@@ -193,6 +234,7 @@ footer {
 
 <nav>
   <a href="#about">About</a>
+  <a href="#timeline">Timeline</a>
   <a href="#skills">Skills</a>
   <a href="#projects">Projects</a>
   <a href="#contact">Contact</a>
@@ -211,9 +253,37 @@ footer {
         <p class="subtitle reveal-up delay-3">Full-stack developer and student at 42 Lausanne. Low-level systems, web platforms, cybersecurity, browser extensions — I write code that runs in production.</p>
       </div>
     </div>
-    <div class="terminal reveal-up delay-4">
+    <div class="terminal reveal-up delay-4" id="terminal-wrapper">
       <div class="terminal-bar"><span></span><span></span><span></span></div>
-      <div class="terminal-body" id="terminal"></div>
+      <div class="terminal-body" id="terminal"><span class="output">Try </span><span class="cmd">ls</span><span class="output"> and </span><span class="cmd">cat cv.pdf</span></div>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <div class="section-label reveal-up">How I got here</div>
+    <h2 class="reveal-up">Timeline</h2>
+    <div class="timeline">
+      <div class="git-commit reveal-left delay-1">
+        <span class="hash">a1b2c3d</span><span class="tag">feat:</span><span class="msg">survive 42 Piscine — intensive C, Shell, peer evaluations</span><span class="date">Aug 2024</span>
+      </div>
+      <div class="git-commit reveal-left delay-1">
+        <span class="hash">e4f5g6h</span><span class="tag">feat:</span><span class="msg">build Wolfenstein 3D clone from scratch in C with raycasting</span><span class="date">Jun 2025</span>
+      </div>
+      <div class="git-commit reveal-left delay-2">
+        <span class="hash">7i8j9k0</span><span class="tag">feat:</span><span class="msg">solve dining philosophers — threads, mutexes, deadlock prevention</span><span class="date">May 2025</span>
+      </div>
+      <div class="git-commit reveal-left delay-2">
+        <span class="hash">l1m2n3o</span><span class="tag">feat:</span><span class="msg">deploy multi-container Docker infrastructure — NGINX, MariaDB, WordPress</span><span class="date">Dec 2025</span>
+      </div>
+      <div class="git-commit reveal-right delay-3">
+        <span class="hash">p4q5r6s</span><span class="tag">feat:</span><span class="msg">launch full-stack gaming platform — SvelteKit, FastAPI, real-time Pong</span><span class="date">Jun 2026</span>
+      </div>
+      <div class="git-commit reveal-right delay-3">
+        <span class="hash">t7u8v9w</span><span class="tag">deploy:</span><span class="msg">VulnForge — AI-powered multi-agent penetration testing platform</span><span class="date">Jun 2026</span>
+      </div>
+      <div class="git-commit reveal-right delay-4">
+        <span class="hash">x0y1z2a</span><span class="tag">ship:</span><span class="msg">SEO Tools — Chrome extension + API, Stripe, 76 tests, 2-week build</span><span class="date">Jul 2026</span>
+      </div>
     </div>
   </section>
 
@@ -307,6 +377,19 @@ footer {
   <div class="container">Mehdi Mouaffak — Lausanne, Switzerland</div>
 </footer>
 
+<div class="quick-scan" id="quick-scan">
+  <div class="tl-dr">
+    <span class="label">TL;DR</span>
+    <span>42 Lausanne</span><span class="sep">·</span>
+    <span>Full-stack C / Python / JS</span><span class="sep">·</span>
+    <span>Docker</span><span class="sep">·</span>
+    <span>Cybersécurité</span><span class="sep">·</span>
+    <span>Lausanne CH</span><span class="sep">·</span>
+    <span>Disponible</span>
+  </div>
+  <a href="mailto:mmouaffa@student.42lausanne.ch?subject=Entretien%20%E2%80%94%20Mehdi%20Mouaffak" class="action-btn">Request interview</a>
+</div>
+
 <script>
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
@@ -320,17 +403,17 @@ function resize() {
 resize();
 window.addEventListener('resize', resize);
 
-const PARTICLE_COUNT = 60;
+const PARTICLE_COUNT = 100;
 let mouseX = -1000, mouseY = -1000;
 
 for (let i = 0; i < PARTICLE_COUNT; i++) {
   particles.push({
     x: Math.random() * w,
     y: Math.random() * h,
-    vx: (Math.random() - 0.5) * 0.3,
-    vy: (Math.random() - 0.5) * 0.3,
-    r: Math.random() * 1.5 + 0.5,
-    opacity: Math.random() * 0.3 + 0.1
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    r: Math.random() * 2.2 + 1,
+    opacity: Math.random() * 0.4 + 0.15
   });
 }
 
@@ -348,14 +431,14 @@ function draw() {
     const dx = mouseX - p.x;
     const dy = mouseY - p.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < 180 && dist > 0) {
-      const force = (180 - dist) / 180 * 0.03;
+    if (dist < 250 && dist > 0) {
+      const force = (250 - dist) / 250 * 0.06;
       p.vx -= (dx / dist) * force;
       p.vy -= (dy / dist) * force;
     }
 
-    p.vx *= 0.998;
-    p.vy *= 0.998;
+    p.vx *= 0.997;
+    p.vy *= 0.997;
     p.x += p.vx;
     p.y += p.vy;
     if (p.x < 0) p.x = w;
@@ -370,14 +453,14 @@ function draw() {
 
     for (let j = i + 1; j < particles.length; j++) {
       const q = particles[j];
-      const dx = p.x - q.x;
-      const dy = p.y - q.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 100) {
+      const dx2 = p.x - q.x;
+      const dy2 = p.y - q.y;
+      const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+      if (dist2 < 120) {
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(q.x, q.y);
-        ctx.strokeStyle = `rgba(255,255,255,${0.03 * (1 - dist / 100)})`;
+        ctx.strokeStyle = `rgba(255,255,255,${0.04 * (1 - dist2 / 120)})`;
         ctx.stroke();
       }
     }
@@ -386,7 +469,10 @@ function draw() {
 }
 draw();
 
+// Terminal animation + interactive mode
 const terminal = document.getElementById('terminal');
+terminal.innerHTML = '';
+
 const lines = [
   '<span class="output">$ </span><span class="cmd">whoami</span>',
   '<span class="output">mehdi.mouaffak — developer, student @42Lausanne, CH</span>',
@@ -399,21 +485,104 @@ const lines = [
   '',
   '<span class="output">$ </span><span class="cmd">cat ~/status</span>',
   '<span class="output">Available for internship — Lausanne, Switzerland</span>',
-  '',
-  '<span class="output">$ </span><span class="cursor"></span>'
+  ''
 ];
 
 let lineIndex = 0;
 function typeLine() {
-  if (lineIndex >= lines.length) return;
+  if (lineIndex >= lines.length) { showPrompt(); return; }
   const div = document.createElement('div');
   div.innerHTML = lines[lineIndex];
   terminal.appendChild(div);
+  terminal.scrollTop = terminal.scrollHeight;
   lineIndex++;
-  const delay = lines[lineIndex - 1].includes('<span class="output">$ </span>') ? 400 : 200;
+  const delay = lines[lineIndex - 1].includes('<span class="output">$ </span>') ? 350 : 180;
   setTimeout(typeLine, delay);
 }
 setTimeout(typeLine, 600);
+
+function showPrompt() {
+  const div = document.createElement('div');
+  div.className = 'prompt-line';
+  div.innerHTML = '<span class="output">$ </span>';
+  const input = document.createElement('input');
+  input.setAttribute('spellcheck', 'false');
+  input.setAttribute('autocomplete', 'off');
+  div.appendChild(input);
+  terminal.appendChild(div);
+  terminal.scrollTop = terminal.scrollHeight;
+  input.focus();
+
+  let historyIdx = -1;
+  const history = [];
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const cmd = input.value.trim();
+      input.disabled = true;
+      history.push(cmd);
+      historyIdx = history.length;
+
+      const echo = document.createElement('div');
+      echo.innerHTML = '<span class="output">$ </span><span class="cmd">' + cmd.replace(/</g,'&lt;') + '</span>';
+      terminal.insertBefore(echo, div);
+      terminal.scrollTop = terminal.scrollHeight;
+
+      handleCommand(cmd);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (historyIdx > 0) { historyIdx--; input.value = history[historyIdx]; }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIdx < history.length - 1) { historyIdx++; input.value = history[historyIdx]; }
+      else { historyIdx = history.length; input.value = ''; }
+    }
+  });
+}
+
+function handleCommand(cmd) {
+  const trimmed = cmd.trim().toLowerCase();
+
+  if (trimmed === 'ls') {
+    const out = document.createElement('div');
+    out.innerHTML = '<span class="output">cv.pdf</span>';
+    terminal.appendChild(out);
+  } else if (trimmed === 'cat cv.pdf' || trimmed === 'cat cv.pdf') {
+    const out = document.createElement('div');
+    out.innerHTML = '<span class="output">Downloading cv.pdf...</span>';
+    terminal.appendChild(out);
+    const a = document.createElement('a');
+    a.href = 'cv.pdf'; a.download = 'Mehdi_Mouaffak_CV.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  } else if (trimmed === 'help') {
+    const out = document.createElement('div');
+    out.innerHTML = '<span class="output">Available commands: </span><span class="cmd">ls</span><span class="output">, </span><span class="cmd">cat cv.pdf</span><span class="output">, </span><span class="cmd">help</span>';
+    terminal.appendChild(out);
+  } else if (trimmed === 'clear') {
+    terminal.innerHTML = '';
+  } else if (trimmed !== '') {
+    const out = document.createElement('div');
+    out.innerHTML = '<span class="output">command not found: ' + trimmed.replace(/</g,'&lt;') + '</span>';
+    terminal.appendChild(out);
+  }
+
+  terminal.scrollTop = terminal.scrollHeight;
+  showPrompt();
+}
+
+// Quick-scan banner — appears after 10s or 40% scroll
+let bannerShown = false;
+function showBanner() {
+  if (bannerShown) return;
+  bannerShown = true;
+  document.getElementById('quick-scan').classList.add('visible');
+}
+setTimeout(showBanner, 10000);
+window.addEventListener('scroll', function() {
+  if (bannerShown) return;
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+  if (pct > 0.4) showBanner();
+}, { passive: true });
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
